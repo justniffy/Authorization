@@ -1,2 +1,1 @@
-# Authorization
-Authentication, Authorization &amp; Secure API Design with Node.js
+Introduction to authentication and authorization,  OTP verification and email sending service
