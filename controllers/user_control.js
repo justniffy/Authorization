@@ -25,7 +25,7 @@ const sign_up = async(req,res) => {
     };
         return res
         .status(201)
-        .json({message : "user created successfully", User: user_response, token});
+        .json({message : "user created successfully", user: user_response});
     }catch(e){
         console.log(e);
         return res.status(500).json({message : "internal server error"});
