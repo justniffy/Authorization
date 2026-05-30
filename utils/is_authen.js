@@ -2,10 +2,10 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user_model");
 
 
-const is_Auth = async (req,resizeBy,next) => {
+const is_Auth = async (req,res,next) => {
     const auth_head = req.headers.authorization;
     if (!auth_head || !auth_head.startsWith("Bearer")){
-        return resizeBy.status(401).json({message: "Unauthorized"});
+        return res.status(401).json({message: "Unauthorized"});
     }
     const token = auth_head.split(" ")[1];
     try{

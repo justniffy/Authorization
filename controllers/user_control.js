@@ -21,6 +21,8 @@ const sign_up = async(req,res) => {
       first_name,
       last_name,
       email, 
+      otp,
+      otp_expiry,
       password: hashed_password});
 
 
@@ -71,22 +73,26 @@ const sign_in = async(req,res) =>{
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({id : user._id , first_name: user.first_name}, process.env.JWT_SECRET,{
+    const token = jwt.sign(
+      {id : user._id , first_name: user.first_name},
+       process.env.JWT_SECRET,
+       {
         expiresIn : "1h"
-    });
-    const user_response ={
-        id : user._id,
-        first_name: user.first_name,
-        last_name : user.last_name,
-        email: user.email,
-        token : token,
-         role: user.role,
+    },
+  );
+  const user_response ={
+     id : user._id,
+     first_name: user.first_name,
+     last_name : user.last_name,
+     email: user.email,
+     token : token,
+     role: user.role,
     };
 
 
     return res
       .status(200)
-      .json({ message: "User signed in successfully", user,token });
+      .json({ message: "User signed in successfully", user_response });
     }catch(e){
          console.log(e)
          return res.status(500).json({message: "Internal server error"});
@@ -114,7 +120,9 @@ const make_admin = async (req,res)=> {
 const get_all_users = async (req,res) => {
     
     if(req.user.role !== "admin"){
-        return res.status(403).json({message: "You are not an admin"});
+        return res
+        .status(403)
+        .json({message: "You are not an admin"});
     }
     try{
         const users = await User.find().select("-password");
@@ -142,13 +150,16 @@ const verify_email = async (req, res) => {
     user.otp = undefined;
     user.otp_expiry = undefined;
     await user.save();
-
+     
     return res.status(200).json({ message: "Email verified successfully" });
-  } catch (e) {
+     } catch (e) {
     console.log(e);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
 
 const resend_otp = async (req, res) => {
   const { email } = req.body;
@@ -168,6 +179,8 @@ const resend_otp = async (req, res) => {
     console.log(e);
     return res.status(500).json({ message: "Internal server error" });
   }
+  
+
 };
 
 
