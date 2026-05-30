@@ -174,6 +174,12 @@ const resend_otp = async (req, res) => {
     user.otp_expiry = otp_expiry;
     await user.save();
 
+     await sendEmail(
+      email,
+      "OTP Verification",
+      `Your OTP is ${otp}. It expires in 10 minutes.`
+    );
+
     return res.status(200).json({ message: "OTP resent successfully", otp });
   } catch (e) {
     console.log(e);
